@@ -1,52 +1,16 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="main">
-    <div class="left-pane">
-      <h3 class="title">Clouds & Atmosphere</h3>
-      <n-input-number class="forms" />
+  <div class="flex flex-row w-full text-xl mt-2 font-sans font-semibold">
+    <div class="flex justify-center flex-col w-1/2 h-full overflow-hidden pl-10">
+      <h3 class="border-b border-white border-solid border-1 mb-12">Clouds & Atmosphere</h3>
     </div>
-    <div class="right-pane">
-      <h3 class="title">Wind</h3>
+    <div class="flex justify-center flex-col w-1/2 h-full overflow-hidden pl-8 pr-10">
+      <h3 class="border-b border-white border-solid border-1 mb-12">Wind</h3>
     </div>
   </div>
 </template>
 
 <script></script>
 
-<style scoped>
-.main {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-.left-pane {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  width: 50%;
-  height: 100%;
-  overflow: hidden;
-  padding-left: 2.5rem;
-}
-
-.forms {
-  width: 50%;
-}
-
-.title {
-  border-bottom: white 1px solid;
-  margin-bottom: 3rem;
-}
-
-.right-pane {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  padding-left: 2rem;
-  width: 50%;
-  height: 100%;
-  overflow: hidden;
-  padding-right: 2.5rem;
-}
-</style>
+<style scoped></style>
