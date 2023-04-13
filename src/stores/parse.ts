@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { TWeather } from '@/libs/weather'
+import type { TWeather } from '@/stores/weather'
 
 export const weatherStore = defineStore('weather', {
   state: () => {
