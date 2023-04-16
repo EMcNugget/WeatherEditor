@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { type GlobalTheme, darkTheme, type GlobalThemeOverrides } from 'naive-ui'
+import { darkTheme } from 'naive-ui'
+import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
 
 const theme = ref<GlobalTheme>(darkTheme)
 const selectedTheme = ref('Dark')
