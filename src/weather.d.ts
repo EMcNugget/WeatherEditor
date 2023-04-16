@@ -12,7 +12,7 @@ interface Wind {
   speed: number
 }
 
-export type TWeather = {
+export interface TWeather {
   weather: {
     atmosphere_type: number
     clouds: {

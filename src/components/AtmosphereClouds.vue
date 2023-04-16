@@ -17,13 +17,14 @@
 </template>
 
 <script lang="ts">
-import SliderComponent from '@/libs/SliderComponent.vue'
+import SliderComponent from '../libs/SliderComponent.vue'
 
 export default {
   components: {
     SliderComponent
   },
-  data() {
+  // prettier-ignore
+  data () {
     return {
       temp: 20
     }

@@ -1,19 +1,18 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "weather.d.ts"],
   "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "ignoreDeprecations": "5.0",
-    "types": ["naive-ui/volar"]
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["naive-ui/volar"],
   },
-
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "include": ["src/vite-env.d.ts", "src/**/*", "src/**/*.vue"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
