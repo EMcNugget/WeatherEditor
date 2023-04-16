@@ -3,8 +3,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import naive from 'naive-ui'
 
-import './assets/main.css'
-import './assets/style.css'
+import './assets/tailwind.css'
 
 const app = createApp(App)
 
