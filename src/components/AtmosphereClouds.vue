@@ -131,6 +131,11 @@ export default {
     const isDustSmokeEnabled = ref(false)
     const isDustSmokeDisabled = ref(true)
 
+    const mmHgToinHG = (mmHG: number) => {
+      const p = mmHG / 25.4
+      return Number(p.toFixed(2))
+    }
+
     watchEffect(() => {
       isFogDisabled.value = !isFogEnabled.value
       isDustSmokeDisabled.value = !isDustSmokeEnabled.value
@@ -147,7 +152,7 @@ export default {
       thickness: ref(656),
       fog_disabled: ref(false),
       temp: ref(15),
-      pressure: ref(29.92), // Add conversion to hPa
+      pressure: ref(mmHgToinHG(760)),
       turbulence: ref(0),
       halo_main_value: ref('o1'),
       density: ref(0),
