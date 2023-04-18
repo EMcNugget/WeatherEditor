@@ -6,9 +6,15 @@
         :step="1"
         :min="min"
         :max="max"
+        :disabled="disabled"
         class="mr-4 ml-0 w-52"
       />
-      <NInputNumber v-model:value="value" size="small" class="w-32">
+      <NInputNumber
+        v-model:value="value"
+        size="small"
+        class="w-32"
+        :disabled="disabled"
+      >
         <template #suffix>{{ suffix }}</template>
       </NInputNumber>
     </NFormItem>
@@ -39,6 +45,10 @@ export default defineComponent({
     val: {
       type: Number,
       default: 0
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {

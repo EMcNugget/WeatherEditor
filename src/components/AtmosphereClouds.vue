@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row">
-    <n-space vertical>
+    <n-space vertical class="mr-6">
       <n-form-item label="Temperature" label-style="color: white">
         <n-input-number
           id="temperature-input"
@@ -13,7 +13,7 @@
           <template #suffix> °C </template>
         </n-input-number>
       </n-form-item>
-      <n-divider style="margin-top: 0%; margin-bottom: 0.2rem" />
+      <n-divider class="divider" />
       <n-form-item label="Pressure" label-style="color: white">
         <n-input-number
           id="pressure-input"
@@ -28,7 +28,7 @@
           <template #suffix> inHg </template>
         </n-input-number>
       </n-form-item>
-      <n-divider style="margin-top: 0%; margin-bottom: 0.2rem" />
+      <n-divider class="divider" />
       <n-form-item label="Ice Halo" label-style="color: white">
         <n-select
           class="w-67"
@@ -45,9 +45,38 @@
           />
         </n-form-item>
       </div>
-      <n-divider style="margin-top: 0%; margin-bottom: 0.2rem" />
+      <n-divider class="divider" />
+      <n-form-item label="Turbulence">
+        <n-input-number
+          id="turbulence-input"
+          class="w-67 min-w-24"
+          v-model:value="turbulence"
+          size="small"
+          :step="3"
+          :min="0"
+          :max="197"
+        >
+          <template #suffix> 0.1* ft</template>
+        </n-input-number>
+      </n-form-item>
+      <n-divider class="divider" />
+      <n-checkbox v-model:checked="isFogEnabled">Toggle Fog</n-checkbox>
+      <SliderComponent
+        labelText="Fog Visibility"
+        class="mt-2 w-67"
+        suffix="ft"
+        :max="19685"
+        :disabled="isFogDisabled"
+      />
+      <SliderComponent
+        labelText="Fog Thickness"
+        class="w-67"
+        suffix="ft"
+        :max="3281"
+        :disabled="isFogDisabled"
+      />
     </n-space>
-    <n-space vertical class="ml-8">
+    <n-space vertical class="ml-8 w-67">
       <n-form-item label="Cloud Preset" label-style="color: white">
         <n-select
           class="w-67"
@@ -55,12 +84,14 @@
           :options="cloud_options"
         />
       </n-form-item>
-      <n-divider
-        style="margin-top: 0%; margin-bottom: 0.2rem; margin-left: 0"
-      />
-      <SliderComponent labelText="Cloud Base" suffix="ft" />
+      <n-divider class="divider" />
+      <SliderComponent labelText="Cloud Base" :val="base" suffix="ft" />
       <div v-if="cloud_options_value === 'Preset0'">
-        <SliderComponent labelText="Cloud Thickness" suffix="ft" />
+        <SliderComponent
+          labelText="Cloud Thickness"
+          :val="thickness"
+          suffix="ft"
+        />
         <n-form-item label="Density" label-style="color: white">
           <n-input-number
             id="cloud-thickness-input"
@@ -68,22 +99,56 @@
             v-model:value="density"
             size="small"
             :min="0"
-            :max="197"
+            :max="10"
           />
         </n-form-item>
       </div>
+      <n-checkbox v-model:checked="isDustSmokeEnabled">
+        Toggle Dust/Smoke
+      </n-checkbox>
+      <SliderComponent
+        labelText="Dust Smoke Visibility"
+        :val="dust_smoke_visibility"
+        suffix="ft"
+        class="mt-2"
+        :min="984"
+        :max="9843"
+        :disabled="isDustSmokeDisabled"
+      />
     </n-space>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import SliderComponent from '../libs/SliderComponent.vue'
 
 export default {
   setup() {
+    const isFogEnabled = ref(false)
+    const isFogDisabled = ref(true)
+
+    const isDustSmokeEnabled = ref(false)
+    const isDustSmokeDisabled = ref(true)
+
+    watchEffect(() => {
+      isFogDisabled.value = !isFogEnabled.value
+      isDustSmokeDisabled.value = !isDustSmokeEnabled.value
+    })
+
     return {
       cloud_options_value: ref('Preset0'),
+      isFogEnabled,
+      isFogDisabled,
+      isDustSmokeEnabled,
+      isDustSmokeDisabled,
+      dust_smoke_visibility: ref(984),
+      base: ref(8202),
+      thickness: ref(656),
+      fog_disabled: ref(false),
+      temp: ref(15),
+      pressure: ref(29.92), // Add conversion to hPa
+      turbulence: ref(0),
       halo_main_value: ref('o1'),
       density: ref(0),
       halo_preset_value: ref('p1'),
@@ -143,15 +208,14 @@ export default {
   },
   components: {
     SliderComponent
-  },
-  // prettier-ignore
-  data () {
-    return {
-      temp: 20,
-      pressure: 29.92
-    }
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.divider {
+  margin-top: 0%;
+  margin-bottom: 0.2rem;
+  margin-left: 0;
+}
+</style>
