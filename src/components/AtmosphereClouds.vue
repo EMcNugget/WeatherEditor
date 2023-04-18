@@ -72,56 +72,23 @@ export default {
       halo_main_value: ref('o1'),
       halo_preset_value: ref('p1'),
       halo_options: [
-        {
-          label: 'Off',
-          value: 'o1'
-        },
-        {
-          label: 'Auto',
-          value: 'o2'
-        },
-        {
-          label: 'Ice Halo On All Mediums',
-          value: 'o3'
-        },
-        {
-          label: 'Ice Halo On High Volumentric Clouds',
-          value: 'o4'
-        },
+        { label: 'Off', value: 'o1' },
+        { label: 'Auto', value: 'o2' },
+        { label: 'Ice Halo On All Mediums', value: 'o3' },
+        { label: 'Ice Halo On High Volumentric Clouds', value: 'o4' },
         {
           label: 'Ice Halo On Cirrus and High Volumentric Clouds',
           value: 'o5'
         },
-        {
-          label: 'Ice Halo On Cirrus Clouds',
-          value: 'o6'
-        }
+        { label: 'Ice Halo On Cirrus Clouds', value: 'o6' }
       ],
       halo_preset: [
-        {
-          label: 'AllKinds',
-          value: 'p1'
-        },
-        {
-          label: 'BasicHaloCircle',
-          value: 'p2'
-        },
-        {
-          label: 'BasicHaloWithSundogs',
-          value: 'p3'
-        },
-        {
-          label: 'BasicSundogsTangents',
-          value: 'p4'
-        },
-        {
-          label: 'SundogsArcs',
-          value: 'p5'
-        },
-        {
-          label: 'Tangents',
-          value: 'p6'
-        }
+        { label: 'AllKinds', value: 'p1' },
+        { label: 'BasicHaloCircle', value: 'p2' },
+        { label: 'BasicHaloWithSundogs', value: 'p3' },
+        { label: 'BasicSundogsTangents', value: 'p4' },
+        { label: 'SundogsArcs', value: 'p5' },
+        { label: 'Tangents', value: 'p6' }
       ],
       cloud_options: [
         { label: 'Nothing', value: 'Preset0' },
