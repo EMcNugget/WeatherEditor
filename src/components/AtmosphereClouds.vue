@@ -4,6 +4,8 @@
       <n-form-item label="Temperature" label-style="color: white">
         <n-input-number
           id="temperature-input"
+          :min="8.4"
+          :max="50"
           v-model:value="temp"
           class="w-67 min-w-24"
           size="small"
@@ -57,6 +59,19 @@
         style="margin-top: 0%; margin-bottom: 0.2rem; margin-left: 0"
       />
       <SliderComponent labelText="Cloud Base" suffix="ft" />
+      <div v-if="cloud_options_value === 'Preset0'">
+        <SliderComponent labelText="Cloud Thickness" suffix="ft" />
+        <n-form-item label="Density" label-style="color: white">
+          <n-input-number
+            id="cloud-thickness-input"
+            class="w-67 min-w-24"
+            v-model:value="density"
+            size="small"
+            :min="0"
+            :max="197"
+          />
+        </n-form-item>
+      </div>
     </n-space>
   </div>
 </template>
@@ -70,6 +85,7 @@ export default {
     return {
       cloud_options_value: ref('Preset0'),
       halo_main_value: ref('o1'),
+      density: ref(0),
       halo_preset_value: ref('p1'),
       halo_options: [
         { label: 'Off', value: 'o1' },

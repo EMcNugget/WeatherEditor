@@ -4,7 +4,8 @@
       <NSlider
         v-model:value="value"
         :step="1"
-        :max="18000"
+        :min="min"
+        :max="max"
         class="mr-4 ml-0 w-52"
       />
       <NInputNumber v-model:value="value" size="small" class="w-32">
@@ -26,11 +27,22 @@ export default defineComponent({
     suffix: {
       type: String,
       default: ''
+    },
+    max: {
+      type: Number,
+      default: 18000
+    },
+    min: {
+      type: Number,
+      default: 0
+    },
+    val: {
+      type: Number,
+      default: 0
     }
   },
-  // prettier-ignore
-  setup () {
-    const value = ref(9500)
+  setup(props) {
+    const value = ref(props.val)
 
     return {
       value
