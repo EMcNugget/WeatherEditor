@@ -57,11 +57,3 @@ export default {
   }
 }
 </script>
-
-<style>
-body {
-  background-color: #293949;
-  color: #cadad7;
-  font-family: 'Muli', Helvetica;
-}
-</style>

@@ -86,12 +86,14 @@
       </n-form-item>
       <n-divider class="divider" />
       <SliderComponent labelText="Cloud Base" :val="base" suffix="ft" />
+      <n-divider class="divider" />
       <div v-if="cloud_options_value === 'Preset0'">
         <SliderComponent
           labelText="Cloud Thickness"
           :val="thickness"
           suffix="ft"
         />
+        <n-divider class="divider" />
         <n-form-item label="Density" label-style="color: white">
           <n-input-number
             id="cloud-thickness-input"
@@ -102,6 +104,7 @@
             :max="10"
           />
         </n-form-item>
+        <n-divider class="divider" />
       </div>
       <n-checkbox v-model:checked="isDustSmokeEnabled">
         Toggle Dust/Smoke
@@ -213,9 +216,9 @@ export default {
         { label: 'Overcast 6', value: 'Preset25' },
         { label: 'Overcast 7', value: 'Preset26' },
         { label: 'Overcast 8', value: 'Preset27' },
-        { label: 'Overcast & Rain 1', value: 'Preset28' },
-        { label: 'Overcast & Rain 2', value: 'Preset29' },
-        { label: 'Overcast & Rain 3', value: 'Preset30' }
+        { label: 'Overcast & Rain 1', value: 'RainyPreset1' },
+        { label: 'Overcast & Rain 2', value: 'RainyPreset2' },
+        { label: 'Overcast & Rain 3', value: 'RainyPreset3' }
       ]
     }
   },
@@ -230,11 +233,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.divider {
-  margin-top: 0%;
-  margin-bottom: 0.2rem;
-  margin-left: 0;
-}
-</style>
