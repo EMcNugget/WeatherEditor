@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-row">
-    <n-space vertical class="mr-6">
+    <n-space vertical class="mr-6 w-full">
       <n-form-item label="Temperature" label-style="color: white">
         <n-input-number
           id="temperature-input"
           :min="8.4"
           :max="50"
           v-model:value="temp"
-          class="w-67 min-w-24"
+          class="w-full min-w-24"
           size="small"
         >
           <template #suffix> °C </template>
@@ -18,7 +18,7 @@
         <n-input-number
           id="pressure-input"
           v-model:value="pressure"
-          class="w-67 min-w-24"
+          class="w-full min-w-24"
           size="small"
           :step="0.01"
           :min="28.35"
@@ -31,7 +31,7 @@
       <n-divider class="divider" />
       <n-form-item label="Ice Halo" label-style="color: white">
         <n-select
-          class="w-67"
+          class="w-full"
           v-model:value="halo_main_value"
           :options="halo_options"
         />
@@ -39,7 +39,7 @@
       <div v-if="halo_main_value !== 'o1' && halo_main_value !== 'o2'">
         <n-form-item label="Halo Preset" label-style="color: white">
           <n-select
-            class="w-67"
+            class="w-full"
             v-model:value="halo_preset_value"
             :options="halo_preset"
           />
@@ -49,7 +49,7 @@
       <n-form-item label="Turbulence">
         <n-input-number
           id="turbulence-input"
-          class="w-67 min-w-24"
+          class="w-full min-w-24"
           v-model:value="turbulence"
           size="small"
           :step="3"
@@ -63,23 +63,23 @@
       <n-checkbox v-model:checked="isFogEnabled">Toggle Fog</n-checkbox>
       <SliderComponent
         labelText="Fog Visibility"
-        class="mt-2 w-67"
+        class="mt-2 w-full"
         suffix="ft"
         :max="19685"
         :disabled="isFogDisabled"
       />
       <SliderComponent
         labelText="Fog Thickness"
-        class="w-67"
+        class="w-full"
         suffix="ft"
         :max="3281"
         :disabled="isFogDisabled"
       />
     </n-space>
-    <n-space vertical class="ml-8 w-67">
+    <n-space vertical class="ml-8 w-full">
       <n-form-item label="Cloud Preset" label-style="color: white">
         <n-select
-          class="w-67"
+          class="w-full"
           v-model:value="cloud_options_value"
           :options="cloud_options"
         />
@@ -95,7 +95,7 @@
         <n-form-item label="Density" label-style="color: white">
           <n-input-number
             id="cloud-thickness-input"
-            class="w-67 min-w-24"
+            class="w-full min-w-24"
             v-model:value="density"
             size="small"
             :min="0"

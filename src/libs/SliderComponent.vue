@@ -12,7 +12,7 @@
       <n-input-number
         v-model:value="value"
         size="small"
-        class="w-32"
+        class="min-w-44 w-52"
         :disabled="disabled"
       >
         <template #suffix>{{ suffix }}</template>
