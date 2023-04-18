@@ -122,6 +122,14 @@
 <script lang="ts">
 import { ref, watchEffect } from 'vue'
 import SliderComponent from '../libs/SliderComponent.vue'
+import {
+  NFormItem,
+  NInputNumber,
+  NSelect,
+  NCheckbox,
+  NDivider,
+  NSpace
+} from 'naive-ui'
 
 export default {
   setup() {
@@ -212,7 +220,13 @@ export default {
     }
   },
   components: {
-    SliderComponent
+    SliderComponent,
+    NSpace,
+    NFormItem,
+    NInputNumber,
+    NSelect,
+    NCheckbox,
+    NDivider
   }
 }
 </script>

@@ -28,11 +28,13 @@ import WindConditions from './components/WindConditions.vue'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
 import { useThemeStore } from './stores/state'
 import { ref } from 'vue'
+import { NConfigProvider } from 'naive-ui'
 
 export default {
   components: {
     AtmosphereClouds,
-    WindConditions
+    WindConditions,
+    NConfigProvider
   },
   setup() {
     const themeStore = useThemeStore()

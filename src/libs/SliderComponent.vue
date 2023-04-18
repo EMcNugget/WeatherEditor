@@ -1,7 +1,7 @@
 <template>
-  <NSpace vertical>
-    <NFormItem :label="labelText" label-style="color: white">
-      <NSlider
+  <n-space vertical>
+    <n-form-item :label="labelText" label-style="color: white">
+      <n-slider
         v-model:value="value"
         :step="1"
         :min="min"
@@ -9,20 +9,21 @@
         :disabled="disabled"
         class="mr-4 ml-0 w-52"
       />
-      <NInputNumber
+      <n-input-number
         v-model:value="value"
         size="small"
         class="w-32"
         :disabled="disabled"
       >
         <template #suffix>{{ suffix }}</template>
-      </NInputNumber>
-    </NFormItem>
-  </NSpace>
+      </n-input-number>
+    </n-form-item>
+  </n-space>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { NInputNumber, NSlider, NSpace, NFormItem } from 'naive-ui'
 
 export default defineComponent({
   props: {
@@ -57,6 +58,12 @@ export default defineComponent({
     return {
       value
     }
+  },
+  components: {
+    NInputNumber,
+    NSlider,
+    NSpace,
+    NFormItem
   }
 })
 </script>
