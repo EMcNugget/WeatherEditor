@@ -19,6 +19,9 @@
         <WindConditions />
       </div>
     </div>
+    <n-button size="large" @click="$emit('save')" class="mb-4 ml-10"
+      >Save</n-button
+    >
   </n-config-provider>
 </template>
 
@@ -26,15 +29,16 @@
 import AtmosphereClouds from './components/AtmosphereClouds.vue'
 import WindConditions from './components/WindConditions.vue'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
+import { NConfigProvider, NButton } from 'naive-ui'
 import { useThemeStore } from './stores/state'
 import { ref } from 'vue'
-import { NConfigProvider } from 'naive-ui'
 
 export default {
   components: {
     AtmosphereClouds,
     WindConditions,
-    NConfigProvider
+    NConfigProvider,
+    NButton
   },
   setup() {
     const themeStore = useThemeStore()

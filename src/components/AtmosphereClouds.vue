@@ -46,20 +46,6 @@
         </n-form-item>
       </div>
       <n-divider class="divider" />
-      <n-form-item label="Turbulence">
-        <n-input-number
-          id="turbulence-input"
-          class="w-full min-w-24"
-          v-model:value="turbulence"
-          size="small"
-          :step="3"
-          :min="0"
-          :max="197"
-        >
-          <template #suffix> 0.1* ft</template>
-        </n-input-number>
-      </n-form-item>
-      <n-divider class="divider" />
       <n-checkbox v-model:checked="isFogEnabled">Toggle Fog</n-checkbox>
       <SliderComponent
         labelText="Fog Visibility"
@@ -164,7 +150,6 @@ export default {
       fog_disabled: ref(false),
       temp: ref(15),
       pressure: ref(mmHgToinHG(760)),
-      turbulence: ref(0),
       halo_main_value: ref('o1'),
       density: ref(0),
       halo_preset_value: ref('p1'),
