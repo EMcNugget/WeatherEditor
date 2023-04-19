@@ -6,6 +6,7 @@
           id="sfc-winds-input"
           class="w-3/5"
           v-model:value="sfcwind"
+          :min="0"
         >
           <template #suffix>kts</template>
         </n-input-number>
@@ -13,6 +14,8 @@
           class="ml-4 w-1/2"
           id="sfc-winds-dir-input"
           v-model:value="sfcwinddir"
+          :min="0"
+          :format="windDir"
         >
           <template #suffix>°</template>
         </n-input-number>
@@ -24,6 +27,7 @@
           class="w-3/5"
           id="twok-wind-input"
           v-model:value="twokwind"
+          :min="0"
         >
           <template #suffix>kts</template>
         </n-input-number>
@@ -31,6 +35,8 @@
           class="ml-4 w-1/2"
           id="twok-wind-dir-input"
           v-model:value="twokwinddir"
+          :min="0"
+          :format="windDir"
         >
           <template #suffix>°</template>
         </n-input-number>
@@ -42,6 +48,7 @@
           class="w-3/5"
           id="eightk-wind-input"
           v-model:value="eightkwind"
+          :min="0"
         >
           <template #suffix>kts</template>
         </n-input-number>
@@ -49,6 +56,8 @@
           class="ml-4 w-1/2"
           id="eightk-wind-dir-input"
           v-model:value="eightkwinddir"
+          :min="0"
+          :format="windDir"
         >
           <template #suffix>°</template>
         </n-input-number>
@@ -75,6 +84,19 @@
 import { NFormItem, NInputNumber, NDivider } from 'naive-ui'
 import { ref } from 'vue'
 
+const windDir = (wind: number | null): string => {
+  if (wind === null) {
+    return ''
+  } else if (wind > 359) {
+    return '000'
+  } else if (wind < 100) {
+    let result = wind.toString().padStart(3, '0')
+    return result
+  } else {
+    return wind.toString()
+  }
+}
+
 export default {
   components: {
     NFormItem,
@@ -83,6 +105,7 @@ export default {
   },
   setup() {
     return {
+      windDir,
       turbulence: ref(0),
       sfcwind: ref(0),
       sfcwinddir: ref(0),
