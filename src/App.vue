@@ -13,15 +13,13 @@
         <AtmosphereClouds />
       </div>
       <div
-        class="flex justify-center flex-col w-1/2 h-full overflow-hidden pl-8 pr-10"
+        class="flex justify-center flex-col w-1/2 h-full overflow-hidden pl-8 pr-10 ml-8"
       >
         <h3 class="border-b border-white border-solid border-1 mb-12">Wind</h3>
         <WindConditions />
       </div>
     </div>
-    <n-button size="large" @click="$emit('save')" class="mb-4 ml-10"
-      >Save</n-button
-    >
+    <n-button size="large" class="mb-4 ml-10">Save</n-button>
   </n-config-provider>
 </template>
 
@@ -52,11 +50,22 @@ export default {
       themeStore.setThemeOverrides(overrides)
     }
 
+    const handleSaveClick = () => {
+      document.dispatchEvent(new Event('save'))
+    }
+
+    const addEventListener = () => {
+      document.addEventListener('save', handleSaveClick)
+    }
+
+    addEventListener()
+
     return {
       theme,
       selectedTheme,
       themeOverrides,
-      setThemeOverrides
+      setThemeOverrides,
+      handleSaveClick
     }
   }
 }

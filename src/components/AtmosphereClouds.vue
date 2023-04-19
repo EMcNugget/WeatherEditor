@@ -72,14 +72,12 @@
       </n-form-item>
       <n-divider class="divider" />
       <SliderComponent labelText="Cloud Base" :val="base" suffix="ft" />
-      <n-divider class="divider" />
       <div v-if="cloud_options_value === 'Preset0'">
         <SliderComponent
           labelText="Cloud Thickness"
           :val="thickness"
           suffix="ft"
         />
-        <n-divider class="divider" />
         <n-form-item label="Density" label-style="color: white">
           <n-input-number
             id="cloud-thickness-input"
