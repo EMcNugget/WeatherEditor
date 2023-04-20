@@ -1,0 +1,22 @@
+{
+  "atmosphere_type": 0,
+  "clouds": { "base": 2500, "density": 7, "iprecptns": 1, "thickness": 1250 },
+  "cyclones": [],
+  "dust_density": 3000,
+  "enable_dust": true,
+  "enable_fog": true,
+  "fog": { "thickness": 1000, "visibility": 5220 },
+  "groundTurbulence": 0,
+  "halo": { "crystalsPreset": "BasicHaloCircle", "preset": "HighClouds" },
+  "modifiedTime": true,
+  "name": "Winter, clean sky",
+  "qnh": 760.73,
+  "season": { "temperature": 20 },
+  "type_weather": 0,
+  "visibility": { "distance": 80000 },
+  "wind": {
+    "at2000": { "dir": 0, "speed": 4.1232 },
+    "at8000": { "dir": 77, "speed": 7.2156 },
+    "atGround": { "dir": 0, "speed": 0 }
+  }
+}
