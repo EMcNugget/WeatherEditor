@@ -84,6 +84,14 @@
 import { NFormItem, NInputNumber, NDivider } from 'naive-ui'
 import { ref } from 'vue'
 
+export const turbulence = ref(0)
+export const sfcwind = ref(0)
+export const sfcwinddir = ref(0)
+export const twokwind = ref(0)
+export const twokwinddir = ref(0)
+export const eightkwind = ref(0)
+export const eightkwinddir = ref(0)
+
 const windDir = (wind: number | null): string => {
   if (wind === null) {
     return ''
@@ -106,13 +114,13 @@ export default {
   setup() {
     return {
       windDir,
-      turbulence: ref(0),
-      sfcwind: ref(0),
-      sfcwinddir: ref(0),
-      twokwind: ref(0),
-      twokwinddir: ref(0),
-      eightkwind: ref(0),
-      eightkwinddir: ref(0)
+      turbulence,
+      sfcwind,
+      sfcwinddir,
+      twokwind,
+      twokwinddir,
+      eightkwind,
+      eightkwinddir
     }
   }
 }

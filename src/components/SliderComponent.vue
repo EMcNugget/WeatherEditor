@@ -53,10 +53,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const value = ref(props.val)
-
     return {
-      value
+      value: ref(props.val)
     }
   },
   components: {

@@ -9,10 +9,11 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint ./src --ext .vue,.ts --fix --ignore-path .gitignore",
+    "clean": "npm run lint && npm run format",
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "pinia": "^2.0.34",
+    "pinia": "^2.0.35",
     "vue": "^3.2.47"
   },
   "devDependencies": {

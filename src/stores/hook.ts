@@ -1,7 +1,12 @@
 import { useWeatherStore } from './state'
 import type { TWeather } from './utils/wxtypes'
 
-export default function getWeather(): TWeather {
-  const useWeather = useWeatherStore()
+const useWeather = useWeatherStore()
+
+export const getWeather = (): TWeather => {
   return useWeather.getWx
+}
+
+export const inputWeather = (input: object) => {
+  useWeather.setAll(input)
 }

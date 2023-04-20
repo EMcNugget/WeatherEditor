@@ -19,7 +19,9 @@
         <WindConditions />
       </div>
     </div>
-    <n-button size="large" class="mb-4 ml-10">Save</n-button>
+    <n-button size="large" @click="handleSaveClick" class="mb-4 ml-10"
+      >Save</n-button
+    >
   </n-config-provider>
 </template>
 
@@ -29,6 +31,32 @@ import WindConditions from './components/WindConditions.vue'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
 import { NConfigProvider, NButton } from 'naive-ui'
 import { useThemeStore } from './stores/state'
+import { useWeatherStore } from './stores/state'
+import {
+  turbulence,
+  sfcwind,
+  sfcwinddir,
+  twokwind,
+  twokwinddir,
+  eightkwind,
+  eightkwinddir
+} from './components/WindConditions.vue'
+
+import {
+  cloud_options_value,
+  cloud_base,
+  dust_smoke_visibility,
+  thickness,
+  isFogEnabled,
+  fog_thickness,
+  fog_visibility,
+  temp,
+  pressure,
+  halo_main_value,
+  density,
+  halo_preset_value
+} from './components/AtmosphereClouds.vue'
+
 import { ref } from 'vue'
 
 export default {
@@ -40,6 +68,7 @@ export default {
   },
   setup() {
     const themeStore = useThemeStore()
+    const wx = useWeatherStore()
     const theme = ref<GlobalTheme>(themeStore.theme)
     const selectedTheme = ref<string>(themeStore.getSelectedTheme)
     const themeOverrides = ref<GlobalThemeOverrides>(
@@ -51,15 +80,27 @@ export default {
     }
 
     const handleSaveClick = () => {
-      document.dispatchEvent(new Event('save'))
+      wx.setCloudsPreset(
+        cloud_base.value,
+        density.value,
+        cloud_options_value.value,
+        thickness.value
+      )
+      wx.setPressure(pressure.value)
+      wx.setFog(fog_thickness.value, fog_visibility.value, isFogEnabled.value)
+      wx.setHalo(halo_preset_value.value)
+      wx.setWind(
+        sfcwind.value,
+        sfcwinddir.value,
+        twokwind.value,
+        twokwinddir.value,
+        eightkwind.value,
+        eightkwinddir.value
+      )
+      wx.setTurbulence(turbulence.value)
+      wx.setTemp(temp.value)
+      console.log(wx.getWx)
     }
-
-    const addEventListener = () => {
-      document.addEventListener('save', handleSaveClick)
-    }
-
-    addEventListener()
-
     return {
       theme,
       selectedTheme,

@@ -7,7 +7,7 @@ interface Cyclones {
   rotation: number
 }
 
-export interface TWeather {
+export type TWeather = {
   atmosphere_type: number
   clouds: {
     preset?: string | undefined

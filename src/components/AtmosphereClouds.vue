@@ -52,14 +52,14 @@
         class="mt-2 w-full"
         suffix="ft"
         :max="19685"
-        :disabled="isFogDisabled"
+        :disabled="!isFogEnabled"
       />
       <SliderComponent
         labelText="Fog Thickness"
         class="w-full"
         suffix="ft"
         :max="3281"
-        :disabled="isFogDisabled"
+        :disabled="!isFogEnabled"
       />
     </n-space>
     <n-space vertical class="ml-8 w-full">
@@ -71,8 +71,8 @@
         />
       </n-form-item>
       <n-divider class="divider" />
-      <SliderComponent labelText="Cloud Base" :val="base" suffix="ft" />
-      <div v-if="cloud_options_value === 'Preset0'">
+      <SliderComponent labelText="Cloud Base" :val="cloud_base" suffix="ft" />
+      <div v-if="cloud_options_value === 'Nothing'">
         <SliderComponent
           labelText="Cloud Thickness"
           :val="thickness"
@@ -100,14 +100,15 @@
         class="mt-2"
         :min="984"
         :max="9843"
-        :disabled="isDustSmokeDisabled"
+        :disabled="!isDustSmokeEnabled"
       />
     </n-space>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
+import { Weather } from '../stores/utils/weather'
 import SliderComponent from './SliderComponent.vue'
 import {
   NFormItem,
@@ -118,39 +119,41 @@ import {
   NSpace
 } from 'naive-ui'
 
+const mmHgToinHG = (mmHG: number) => {
+  const p = mmHG / 25.4
+  return Number(p.toFixed(2))
+}
+
+export const isFogEnabled = ref(Weather.enable_fog)
+export const isDustSmokeEnabled = ref(Weather.enable_dust)
+export const cloud_options_value = Weather.clouds.preset
+  ? ref(Weather.clouds.preset)
+  : ref('Nothing')
+export const cloud_base = ref(Weather.clouds.base)
+export const dust_smoke_visibility = ref(Weather.visibility.distance)
+export const thickness = ref(Weather.clouds.thickness)
+export const fog_thickness = ref(Weather.fog.thickness)
+export const fog_visibility = ref(Weather.fog.visibility)
+export const temp = ref(Weather.season.temperature)
+export const pressure = ref(mmHgToinHG(Weather.qnh))
+export const halo_main_value = ref('o1') // Find out what values are
+export const density = ref(Weather.clouds.density)
+export const halo_preset_value = ref('p1') // Findout what the values are
+
 export default {
   setup() {
-    const isFogEnabled = ref(false)
-    const isFogDisabled = ref(true)
-
-    const isDustSmokeEnabled = ref(false)
-    const isDustSmokeDisabled = ref(true)
-
-    const mmHgToinHG = (mmHG: number) => {
-      const p = mmHG / 25.4
-      return Number(p.toFixed(2))
-    }
-
-    watchEffect(() => {
-      isFogDisabled.value = !isFogEnabled.value
-      isDustSmokeDisabled.value = !isDustSmokeEnabled.value
-    })
-
     return {
-      cloud_options_value: ref('Preset0'),
+      cloud_options_value,
+      cloud_base,
       isFogEnabled,
-      isFogDisabled,
       isDustSmokeEnabled,
-      isDustSmokeDisabled,
-      dust_smoke_visibility: ref(984),
-      base: ref(8202),
-      thickness: ref(656),
-      fog_disabled: ref(false),
-      temp: ref(15),
-      pressure: ref(mmHgToinHG(760)),
-      halo_main_value: ref('o1'),
-      density: ref(0),
-      halo_preset_value: ref('p1'),
+      dust_smoke_visibility,
+      thickness,
+      temp,
+      pressure,
+      halo_main_value,
+      density,
+      halo_preset_value,
       halo_options: [
         { label: 'Off', value: 'o1' },
         { label: 'Auto', value: 'o2' },
@@ -171,7 +174,7 @@ export default {
         { label: 'Tangents', value: 'p6' }
       ],
       cloud_options: [
-        { label: 'Nothing', value: 'Preset0' },
+        { label: 'Nothing', value: 'Nothing' },
         { label: 'Light Scattered 1', value: 'Preset1' },
         { label: 'Light Scattered 2', value: 'Preset2' },
         { label: 'High Scattered 1', value: 'Preset3' },

@@ -1,8 +1,11 @@
+/* TODO: Finish halo and dust states */
+
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { darkTheme } from 'naive-ui'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
 import { Weather } from './utils/weather'
+import type { TWeather } from './utils/wxtypes'
 
 const theme = ref<GlobalTheme>(darkTheme)
 const selectedTheme = ref('Dark')
@@ -13,6 +16,11 @@ const themeOverrides: GlobalThemeOverrides = {
     railColor: '#555',
     primaryColorSuppl: '#fff'
   }
+}
+
+const inHgTommHG = (inHg: number) => {
+  const p = inHg * 25.4
+  return Number(p)
 }
 
 export const useWeatherStore = defineStore('wx', {
@@ -26,21 +34,16 @@ export const useWeatherStore = defineStore('wx', {
       cloudPreset?: string,
       cloudThickness?: number
     ) {
-      Weather.clouds.base = cloudBase
-      Weather.clouds.preset = cloudPreset
-      if (cloudPreset) {
-        Weather.clouds.density = undefined
-        Weather.clouds.thickness = undefined
-      } else {
-        Weather.clouds.density = cloudDensity
-        Weather.clouds.thickness = cloudThickness
-      }
+      this.wx.clouds.base = cloudBase
+      this.wx.clouds.preset = cloudPreset
+      this.wx.clouds.density = cloudDensity
+      this.wx.clouds.thickness = cloudThickness
     },
     setPressure(pressure: number) {
-      Weather.qnh = pressure // implement conversion to mmhg
+      this.wx.qnh = inHgTommHG(pressure) // implement conversion to mmhg
     },
     setTemp(temp: number) {
-      Weather.season.temperature = temp
+      this.wx.season.temperature = temp
     },
     setWind(
       sfcwind: number,
@@ -50,30 +53,39 @@ export const useWeatherStore = defineStore('wx', {
       eightwind: number,
       eightwinddir: number
     ) {
-      Weather.wind.atGround.speed = sfcwind
-      Weather.wind.atGround.dir = sfcwinddir
-      Weather.wind.at2000.speed = twowind
-      Weather.wind.at2000.dir = twowinddir
-      Weather.wind.at8000.speed = eightwind
-      Weather.wind.at8000.dir = eightwinddir
+      this.wx.wind.atGround.speed = sfcwind
+      this.wx.wind.atGround.dir = sfcwinddir
+      this.wx.wind.at2000.speed = twowind
+      this.wx.wind.at2000.dir = twowinddir
+      this.wx.wind.at8000.speed = eightwind
+      this.wx.wind.at8000.dir = eightwinddir
     },
     setTurbulence(turb: number) {
-      Weather.groundTurbulence = turb
+      this.wx.groundTurbulence = turb
     },
     setFog(fogThickness: number, fogVisibility: number, enabled: boolean) {
-      Weather.enable_fog = enabled
-      Weather.fog.thickness = fogThickness
-      Weather.fog.visibility = fogVisibility
+      this.wx.enable_fog = enabled
+      this.wx.fog.thickness = fogThickness
+      this.wx.fog.visibility = fogVisibility
     },
     setDust(dustVisbility: number, enabled: boolean, dustDensity?: number) {
-      Weather.enable_dust = enabled
-      Weather.dust_density = dustDensity || 0
+      this.wx.enable_dust = enabled
+      this.wx.dust_density = dustDensity || 0
       /* Still working out what where dust visibility goes, even though its in the DCS MIZ editor*/
+    },
+    setHalo(halo_preset: string, halo_main?: string) {
+      // check the json value of the halo type
+      this.wx.halo.preset = halo_preset
+    },
+    setAll(input: Partial<TWeather>) {
+      if (input !== null) {
+        this.wx = { ...this.wx, ...input }
+      }
     }
   },
   getters: {
-    getWx() {
-      return Weather
+    getWx(): TWeather {
+      return this.wx
     }
   }
 })
