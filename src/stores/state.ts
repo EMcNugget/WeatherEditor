@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { darkTheme } from 'naive-ui'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
-import { Weather } from '../libs/utils/weather'
+import { Weather } from './utils/weather'
 
 const theme = ref<GlobalTheme>(darkTheme)
 const selectedTheme = ref('Dark')
@@ -59,6 +59,16 @@ export const useWeatherStore = defineStore('wx', {
     },
     setTurbulence(turb: number) {
       Weather.groundTurbulence = turb
+    },
+    setFog(fogThickness: number, fogVisibility: number, enabled: boolean) {
+      Weather.enable_fog = enabled
+      Weather.fog.thickness = fogThickness
+      Weather.fog.visibility = fogVisibility
+    },
+    setDust(dustVisbility: number, enabled: boolean, dustDensity?: number) {
+      Weather.enable_dust = enabled
+      Weather.dust_density = dustDensity || 0
+      /* Still working out what where dust visibility goes, even though its in the DCS MIZ editor*/
     }
   },
   getters: {

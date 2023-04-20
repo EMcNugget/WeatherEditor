@@ -108,7 +108,7 @@
 
 <script lang="ts">
 import { ref, watchEffect } from 'vue'
-import SliderComponent from '../libs/SliderComponent.vue'
+import SliderComponent from './SliderComponent.vue'
 import {
   NFormItem,
   NInputNumber,

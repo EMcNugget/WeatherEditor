@@ -18,17 +18,17 @@ export const Weather: TWeather = {
   },
   groundTurbulence: 0,
   halo: {
-    preset: ''
+    preset: 'off'
   },
-  modifiedTime: false,
+  modifiedTime: true,
   name: 'Winter, clean sky',
-  qnh: 0,
+  qnh: 760,
   season: {
     temperature: 0
   },
   type_weather: 0,
   visibility: {
-    distance: 0
+    distance: 80000
   },
   wind: {
     at2000: {
