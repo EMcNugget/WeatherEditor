@@ -10,11 +10,11 @@ interface Cyclones {
 export type TWeather = {
   atmosphere_type: number
   clouds: {
-    preset?: string | undefined
+    preset?: string
     base: number
-    density: number | undefined
-    iprecptns: number
-    thickness: number | undefined
+    density?: number
+    iprecptns?: number
+    thickness?: number
   }
   cyclones: Cyclones[]
   dust_density: number
@@ -27,6 +27,7 @@ export type TWeather = {
   groundTurbulence: number
   halo: {
     preset: string
+    crystalPreset?: string
   }
   modifiedTime: boolean
   name: string // 'Winter, clean sky'

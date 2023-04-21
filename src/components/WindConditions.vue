@@ -82,15 +82,8 @@
 
 <script lang="ts">
 import { NFormItem, NInputNumber, NDivider } from 'naive-ui'
-import { ref } from 'vue'
-
-export const turbulence = ref(0)
-export const sfcwind = ref(0)
-export const sfcwinddir = ref(0)
-export const twokwind = ref(0)
-export const twokwinddir = ref(0)
-export const eightkwind = ref(0)
-export const eightkwinddir = ref(0)
+import { ref, watch } from 'vue'
+import { useWeatherStore } from '../stores/state'
 
 const windDir = (wind: number | null): string => {
   if (wind === null) {
@@ -112,6 +105,59 @@ export default {
     NDivider
   },
   setup() {
+    const Weather = useWeatherStore()
+
+    const turbulence = ref(Weather.wx.groundTurbulence)
+    const sfcwind = ref(Weather.wx.wind.atGround.speed)
+    const sfcwinddir = ref(Weather.wx.wind.atGround.dir)
+    const twokwind = ref(Weather.wx.wind.at2000.speed)
+    const twokwinddir = ref(Weather.wx.wind.at2000.dir)
+    const eightkwind = ref(Weather.wx.wind.at8000.speed)
+    const eightkwinddir = ref(Weather.wx.wind.at8000.dir)
+
+    watch(
+      () => turbulence.value,
+      (newValue) => {
+        Weather.wx.groundTurbulence = newValue
+      }
+    )
+
+    watch(
+      () => sfcwind.value,
+      (newValue) => {
+        Weather.wx.wind.atGround.speed = newValue
+      }
+    )
+    watch(
+      () => sfcwinddir.value,
+      (newValue) => {
+        Weather.wx.wind.atGround.dir = newValue
+      }
+    )
+    watch(
+      () => twokwind.value,
+      (newValue) => {
+        Weather.wx.wind.at2000.speed = newValue
+      }
+    )
+    watch(
+      () => twokwinddir.value,
+      (newValue) => {
+        Weather.wx.wind.at2000.dir = newValue
+      }
+    )
+    watch(
+      () => eightkwind.value,
+      (newValue) => {
+        Weather.wx.wind.at8000.speed = newValue
+      }
+    )
+    watch(
+      () => eightkwinddir.value,
+      (newValue) => {
+        Weather.wx.wind.at8000.dir = newValue
+      }
+    )
     return {
       windDir,
       turbulence,

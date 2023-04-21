@@ -18,64 +18,25 @@ const themeOverrides: GlobalThemeOverrides = {
   }
 }
 
-const inHgTommHG = (inHg: number) => {
-  const p = inHg * 25.4
-  return Number(p)
-}
-
 export const useWeatherStore = defineStore('wx', {
   state: () => ({
     wx: Weather
   }),
   actions: {
-    setCloudsPreset(
-      cloudBase: number,
-      cloudDensity?: number,
-      cloudPreset?: string,
-      cloudThickness?: number
-    ) {
-      this.wx.clouds.base = cloudBase
-      this.wx.clouds.preset = cloudPreset
-      this.wx.clouds.density = cloudDensity
-      this.wx.clouds.thickness = cloudThickness
+    updateFogVis(newValue: number) {
+      this.wx.fog.visibility = newValue
     },
-    setPressure(pressure: number) {
-      this.wx.qnh = inHgTommHG(pressure) // implement conversion to mmhg
+    updateFogThickness(newValue: number) {
+      this.wx.fog.thickness = newValue
     },
-    setTemp(temp: number) {
-      this.wx.season.temperature = temp
+    updateCloudBase(newValue: number) {
+      this.wx.clouds.base = newValue
     },
-    setWind(
-      sfcwind: number,
-      sfcwinddir: number,
-      twowind: number,
-      twowinddir: number,
-      eightwind: number,
-      eightwinddir: number
-    ) {
-      this.wx.wind.atGround.speed = sfcwind
-      this.wx.wind.atGround.dir = sfcwinddir
-      this.wx.wind.at2000.speed = twowind
-      this.wx.wind.at2000.dir = twowinddir
-      this.wx.wind.at8000.speed = eightwind
-      this.wx.wind.at8000.dir = eightwinddir
+    updateCloudThickness(newValue: number) {
+      this.wx.clouds.thickness = newValue
     },
-    setTurbulence(turb: number) {
-      this.wx.groundTurbulence = turb
-    },
-    setFog(fogThickness: number, fogVisibility: number, enabled: boolean) {
-      this.wx.enable_fog = enabled
-      this.wx.fog.thickness = fogThickness
-      this.wx.fog.visibility = fogVisibility
-    },
-    setDust(dustVisbility: number, enabled: boolean, dustDensity?: number) {
-      this.wx.enable_dust = enabled
-      this.wx.dust_density = dustDensity || 0
-      /* Still working out what where dust visibility goes, even though its in the DCS MIZ editor*/
-    },
-    setHalo(halo_preset: string, halo_main?: string) {
-      // check the json value of the halo type
-      this.wx.halo.preset = halo_preset
+    updateDustVis(newValue: number) {
+      this.wx.dust_density = newValue
     },
     setAll(input: Partial<TWeather>) {
       if (input !== null) {

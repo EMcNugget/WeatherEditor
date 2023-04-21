@@ -49,6 +49,8 @@
       <n-checkbox v-model:checked="isFogEnabled">Toggle Fog</n-checkbox>
       <SliderComponent
         labelText="Fog Visibility"
+        v-model:value="fog_visibility"
+        @update-value="updateFogVis"
         class="mt-2 w-full"
         suffix="ft"
         :max="19685"
@@ -56,6 +58,8 @@
       />
       <SliderComponent
         labelText="Fog Thickness"
+        v-model:value="fog_thickness"
+        @update-value="updateFogThickness"
         class="w-full"
         suffix="ft"
         :max="3281"
@@ -71,10 +75,16 @@
         />
       </n-form-item>
       <n-divider class="divider" />
-      <SliderComponent labelText="Cloud Base" :val="cloud_base" suffix="ft" />
+      <SliderComponent
+        labelText="Cloud Base"
+        :val="cloud_base"
+        suffix="ft"
+        @update-value="updateCloudBase"
+      />
       <div v-if="cloud_options_value === 'Nothing'">
         <SliderComponent
           labelText="Cloud Thickness"
+          @update-value="updateCloudThickness"
           :val="thickness"
           suffix="ft"
         />
@@ -96,6 +106,7 @@
       <SliderComponent
         labelText="Dust Smoke Visibility"
         :val="dust_smoke_visibility"
+        @update-value="updateDustVis"
         suffix="ft"
         class="mt-2"
         :min="984"
@@ -108,7 +119,6 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import { Weather } from '../stores/utils/weather'
 import SliderComponent from './SliderComponent.vue'
 import {
   NFormItem,
@@ -118,35 +128,94 @@ import {
   NDivider,
   NSpace
 } from 'naive-ui'
+import { useWeatherStore } from '../stores/state'
+import { watch } from 'vue'
 
 const mmHgToinHG = (mmHG: number) => {
   const p = mmHG / 25.4
   return Number(p.toFixed(2))
 }
 
-export const isFogEnabled = ref(Weather.enable_fog)
-export const isDustSmokeEnabled = ref(Weather.enable_dust)
-export const cloud_options_value = Weather.clouds.preset
-  ? ref(Weather.clouds.preset)
-  : ref('Nothing')
-export const cloud_base = ref(Weather.clouds.base)
-export const dust_smoke_visibility = ref(Weather.visibility.distance)
-export const thickness = ref(Weather.clouds.thickness)
-export const fog_thickness = ref(Weather.fog.thickness)
-export const fog_visibility = ref(Weather.fog.visibility)
-export const temp = ref(Weather.season.temperature)
-export const pressure = ref(mmHgToinHG(Weather.qnh))
-export const halo_main_value = ref('o1') // Find out what values are
-export const density = ref(Weather.clouds.density)
-export const halo_preset_value = ref('p1') // Findout what the values are
+const inHgTommHG = (inHg: number) => {
+  const p = inHg * 25.4
+  return Number(p)
+}
 
 export default {
   setup() {
+    const Weather = useWeatherStore().wx
+    const wxFunc = useWeatherStore()
+
+    const isFogEnabled = ref(Weather.enable_fog)
+    const isDustSmokeEnabled = ref(Weather.enable_dust)
+    const cloud_options_value = Weather.clouds.preset
+      ? ref(Weather.clouds.preset)
+      : ref('Nothing')
+    const cloud_base = ref(Weather.clouds.base)
+    const dust_smoke_visibility = ref(Weather.dust_density)
+    const thickness = ref(Weather.clouds.thickness)
+    const fog_thickness = ref(Weather.fog.thickness)
+    const fog_visibility = ref(Weather.fog.visibility)
+    const temp = ref(Weather.season.temperature)
+    const pressure = ref(mmHgToinHG(Weather.qnh))
+    const halo_main_value = ref('o1') // Find out what values are
+    const density = ref(Weather.clouds.density)
+    const halo_preset_value = ref('p1') // Findout what the values are
+
+    watch(
+      () => isDustSmokeEnabled.value,
+      (newValue) => {
+        Weather.enable_dust = newValue
+      }
+    )
+
+    watch(
+      () => cloud_options_value.value,
+      (newValue) => {
+        Weather.clouds.preset = newValue
+      }
+    )
+
+    watch(
+      () => density.value,
+      (newValue) => {
+        Weather.clouds.density = newValue
+      }
+    )
+
+    watch(
+      () => temp.value,
+      (newValue) => {
+        Weather.season.temperature = newValue
+      }
+    )
+
+    watch(
+      () => isFogEnabled.value,
+      (newValue) => {
+        Weather.enable_fog = newValue
+      }
+    )
+
+    watch(
+      () => pressure.value,
+      (newValue) => {
+        Weather.qnh = inHgTommHG(newValue)
+      }
+    )
+
     return {
+      updateFogVis: wxFunc.updateFogVis,
+      updateFogThickness: wxFunc.updateFogThickness,
+      updateCloudBase: wxFunc.updateCloudBase,
+      updateCloudThickness: wxFunc.updateCloudThickness,
+      updateDustVis: wxFunc.updateDustVis,
       cloud_options_value,
       cloud_base,
       isFogEnabled,
       isDustSmokeEnabled,
+      fog_thickness,
+      fog_visibility,
       dust_smoke_visibility,
       thickness,
       temp,
