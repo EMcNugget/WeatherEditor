@@ -32,16 +32,16 @@
       <n-form-item label="Ice Halo" label-style="color: white">
         <n-select
           class="w-full"
-          v-model:value="halo_main_value"
+          v-model:value="halo_preset"
           :options="halo_options"
         />
       </n-form-item>
-      <div v-if="halo_main_value !== 'o1' && halo_main_value !== 'o2'">
+      <div v-if="halo_preset !== 'o1' && halo_preset !== 'o2'">
         <n-form-item label="Halo Preset" label-style="color: white">
           <n-select
             class="w-full"
-            v-model:value="halo_preset_value"
-            :options="halo_preset"
+            v-model:value="halo_crystal_preset"
+            :options="halo_options"
           />
         </n-form-item>
       </div>
@@ -70,7 +70,7 @@
       <n-form-item label="Cloud Preset" label-style="color: white">
         <n-select
           class="w-full"
-          v-model:value="cloud_options_value"
+          v-model:value="cloud_preset"
           :options="cloud_options"
         />
       </n-form-item>
@@ -81,18 +81,18 @@
         suffix="ft"
         @update-value="updateCloudBase"
       />
-      <div v-if="cloud_options_value === 'Nothing'">
+      <div v-if="cloud_preset === 'Nothing'">
         <SliderComponent
           labelText="Cloud Thickness"
           @update-value="updateCloudThickness"
-          :val="thickness"
+          :val="cloud_thickness"
           suffix="ft"
         />
         <n-form-item label="Density" label-style="color: white">
           <n-input-number
             id="cloud-thickness-input"
             class="w-full min-w-24"
-            v-model:value="density"
+            v-model:value="cloud_density"
             size="small"
             :min="0"
             :max="10"
@@ -118,7 +118,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import SliderComponent from './SliderComponent.vue'
 import {
   NFormItem,
@@ -129,113 +129,105 @@ import {
   NSpace
 } from 'naive-ui'
 import { useWeatherStore } from '../stores/state'
-import { mmHgToinHG, inHgTommHG, MToft } from '../libs/convert'
-import { watch } from 'vue'
 
 export default {
   setup() {
-    const Weather = useWeatherStore().wx
-    const wxFunc = useWeatherStore()
+    const Weather = useWeatherStore()
 
-    const isFogEnabled = ref(Weather.enable_fog)
-    const isDustSmokeEnabled = ref(Weather.enable_dust)
-    const cloud_options_value = Weather.clouds.preset
-      ? ref(Weather.clouds.preset)
+    const cloud_preset = Weather.wx.clouds.preset
+      ? ref(Weather.wx.clouds.preset)
       : ref('Nothing')
-    const cloud_base = ref(MToft(Weather.clouds.base))
-    const dust_smoke_visibility = ref(MToft(Weather.dust_density))
-    const thickness = ref(
-      Weather.clouds.thickness ? MToft(Weather.clouds.thickness) : undefined
-    )
-    const fog_thickness = ref(MToft(Weather.fog.thickness))
-    const fog_visibility = ref(MToft(Weather.fog.visibility))
-    const temp = ref(Weather.season.temperature)
-    const pressure = ref(mmHgToinHG(Weather.qnh))
-    const halo_main_value = ref('o1') // Find out what values are
-    const density = ref(
-      Weather.clouds.density ? MToft(Weather.clouds.density) : undefined
-    )
-    const halo_preset_value = ref('p1') // Findout what the values are
+    const cloud_base = ref(Weather.wx.clouds.base)
+    const cloud_thickness = ref(Weather.wx.clouds.thickness)
+    const cloud_density = ref(Weather.wx.clouds.density)
+    const isDustSmokeEnabled = ref(Weather.wx.enable_dust)
+    const dust_smoke_visibility = ref(Weather.wx.dust_density)
+    const isFogEnabled = ref(Weather.wx.enable_fog)
+    const fog_thickness = ref(Weather.wx.fog.thickness)
+    const fog_visibility = ref(Weather.wx.fog.visibility)
+    const temp = ref(Weather.wx.season.temperature)
+    const pressure = ref(Weather.wx.qnh)
+    const halo_preset = ref(Weather.wx.halo.preset)
+    const halo_crystal_preset = ref(Weather.wx.halo.crystalPreset)
 
     watch(
       () => isDustSmokeEnabled.value,
       (newValue) => {
-        Weather.enable_dust = newValue
+        Weather.wx.enable_dust = newValue
       }
     )
 
     watch(
-      () => halo_main_value.value,
+      () => halo_preset.value,
       (newValue) => {
-        Weather.halo.preset = newValue
+        Weather.wx.halo.preset = newValue
       }
     )
 
     watch(
-      () => halo_preset_value.value,
+      () => halo_crystal_preset.value,
       (newValue) => {
-        Weather.halo.crystalPreset = newValue
+        Weather.wx.halo.crystalPreset = newValue
       }
     )
 
     watch(
-      () => cloud_options_value.value,
+      () => cloud_preset.value,
       (newValue) => {
-        Weather.clouds.preset = newValue
+        Weather.wx.clouds.preset = newValue
       }
     )
 
     watch(
-      () => density.value,
+      () => cloud_density.value,
       (newValue) => {
-        Weather.clouds.density = newValue
+        Weather.wx.clouds.density = newValue
       }
     )
 
     watch(
       () => temp.value,
       (newValue) => {
-        Weather.season.temperature = newValue
+        Weather.wx.season.temperature = newValue
       }
     )
 
     watch(
       () => isFogEnabled.value,
       (newValue) => {
-        Weather.enable_fog = newValue
+        Weather.wx.enable_fog = newValue
       }
     )
 
     watch(
       () => pressure.value,
       (newValue) => {
-        Weather.qnh = inHgTommHG(newValue)
+        Weather.wx.qnh = newValue
       }
     )
 
     return {
-      MToft,
-      updateFogVis: wxFunc.updateFogVis,
-      updateFogThickness: wxFunc.updateFogThickness,
-      updateCloudBase: wxFunc.updateCloudBase,
-      updateCloudThickness: wxFunc.updateCloudThickness,
-      updateDustVis: wxFunc.updateDustVis,
-      cloud_options_value,
+      updateFogVis: Weather.updateFogVis,
+      updateFogThickness: Weather.updateFogThickness,
+      updateCloudBase: Weather.updateCloudBase,
+      updateCloudThickness: Weather.updateCloudThickness,
+      updateDustVis: Weather.updateDustVis,
+      cloud_preset,
       cloud_base,
       isFogEnabled,
       isDustSmokeEnabled,
       fog_thickness,
       fog_visibility,
       dust_smoke_visibility,
-      thickness,
+      cloud_thickness,
       temp,
       pressure,
-      halo_main_value,
-      density,
-      halo_preset_value,
+      halo_preset,
+      cloud_density,
+      halo_crystal_preset,
       halo_options: [
-        { label: 'Off', value: 'o1' },
-        { label: 'Auto', value: 'o2' },
+        { label: 'Off', value: 'Off' },
+        { label: 'Auto', value: 'Auto' },
         { label: 'Ice Halo On All Mediums', value: 'o3' },
         { label: 'Ice Halo On High Volumentric Clouds', value: 'o4' },
         {
@@ -244,16 +236,16 @@ export default {
         },
         { label: 'Ice Halo On Cirrus Clouds', value: 'o6' }
       ],
-      halo_preset: [
-        { label: 'AllKinds', value: 'p1' },
-        { label: 'BasicHaloCircle', value: 'p2' },
-        { label: 'BasicHaloWithSundogs', value: 'p3' },
-        { label: 'BasicSundogsTangents', value: 'p4' },
-        { label: 'SundogsArcs', value: 'p5' },
-        { label: 'Tangents', value: 'p6' }
+      crystal_options: [
+        { label: 'AllKinds', value: 'AllKinds' },
+        { label: 'BasicHaloCircle', value: 'BasicHaloCircle' },
+        { label: 'BasicHaloWithSundogs', value: 'BasicHaloWithSundogs' },
+        { label: 'BasicSundogsTangents', value: 'BasicSundogsTangents' },
+        { label: 'SundogsArcs', value: 'SundogsArcs' },
+        { label: 'Tangents', value: 'Tangents' }
       ],
       cloud_options: [
-        { label: 'Nothing', value: 'Nothing' },
+        { label: 'Nothing', value: 'Nothing' }, // Not an actual preset
         { label: 'Light Scattered 1', value: 'Preset1' },
         { label: 'Light Scattered 2', value: 'Preset2' },
         { label: 'High Scattered 1', value: 'Preset3' },
