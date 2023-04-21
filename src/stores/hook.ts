@@ -7,6 +7,6 @@ export const getWeather = (): TWeather => {
   return useWeather.getWx
 }
 
-export const inputWeather = (input: object) => {
+export const inputWeather = (input: TWeather) => {
   useWeather.setAll(input)
 }

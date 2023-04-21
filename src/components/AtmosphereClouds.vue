@@ -129,17 +129,8 @@ import {
   NSpace
 } from 'naive-ui'
 import { useWeatherStore } from '../stores/state'
+import { mmHgToinHG, inHgTommHG, MToft } from '../libs/convert'
 import { watch } from 'vue'
-
-const mmHgToinHG = (mmHG: number) => {
-  const p = mmHG / 25.4
-  return Number(p.toFixed(2))
-}
-
-const inHgTommHG = (inHg: number) => {
-  const p = inHg * 25.4
-  return Number(p)
-}
 
 export default {
   setup() {
@@ -151,21 +142,39 @@ export default {
     const cloud_options_value = Weather.clouds.preset
       ? ref(Weather.clouds.preset)
       : ref('Nothing')
-    const cloud_base = ref(Weather.clouds.base)
-    const dust_smoke_visibility = ref(Weather.dust_density)
-    const thickness = ref(Weather.clouds.thickness)
-    const fog_thickness = ref(Weather.fog.thickness)
-    const fog_visibility = ref(Weather.fog.visibility)
+    const cloud_base = ref(MToft(Weather.clouds.base))
+    const dust_smoke_visibility = ref(MToft(Weather.dust_density))
+    const thickness = ref(
+      Weather.clouds.thickness ? MToft(Weather.clouds.thickness) : undefined
+    )
+    const fog_thickness = ref(MToft(Weather.fog.thickness))
+    const fog_visibility = ref(MToft(Weather.fog.visibility))
     const temp = ref(Weather.season.temperature)
     const pressure = ref(mmHgToinHG(Weather.qnh))
     const halo_main_value = ref('o1') // Find out what values are
-    const density = ref(Weather.clouds.density)
+    const density = ref(
+      Weather.clouds.density ? MToft(Weather.clouds.density) : undefined
+    )
     const halo_preset_value = ref('p1') // Findout what the values are
 
     watch(
       () => isDustSmokeEnabled.value,
       (newValue) => {
         Weather.enable_dust = newValue
+      }
+    )
+
+    watch(
+      () => halo_main_value.value,
+      (newValue) => {
+        Weather.halo.preset = newValue
+      }
+    )
+
+    watch(
+      () => halo_preset_value.value,
+      (newValue) => {
+        Weather.halo.crystalPreset = newValue
       }
     )
 
@@ -205,6 +214,7 @@ export default {
     )
 
     return {
+      MToft,
       updateFogVis: wxFunc.updateFogVis,
       updateFogThickness: wxFunc.updateFogThickness,
       updateCloudBase: wxFunc.updateCloudBase,

@@ -3,7 +3,7 @@ import type { TWeather } from './wxtypes'
 export const Weather: TWeather = {
   atmosphere_type: 0,
   clouds: {
-    base: 0,
+    base: 2500,
     density: 0,
     iprecptns: 0,
     thickness: 0
@@ -18,13 +18,13 @@ export const Weather: TWeather = {
   },
   groundTurbulence: 0,
   halo: {
-    preset: 'off'
+    preset: 'Off'
   },
   modifiedTime: true,
   name: 'Winter, clean sky',
   qnh: 760,
   season: {
-    temperature: 0
+    temperature: 9
   },
   type_weather: 0,
   visibility: {

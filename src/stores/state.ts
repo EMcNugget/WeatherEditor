@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { darkTheme } from 'naive-ui'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
 import { Weather } from './utils/weather'
+import { ftToM } from '../libs/convert'
 import type { TWeather } from './utils/wxtypes'
 
 const theme = ref<GlobalTheme>(darkTheme)
@@ -24,24 +25,22 @@ export const useWeatherStore = defineStore('wx', {
   }),
   actions: {
     updateFogVis(newValue: number) {
-      this.wx.fog.visibility = newValue
+      this.wx.fog.visibility = ftToM(newValue)
     },
     updateFogThickness(newValue: number) {
-      this.wx.fog.thickness = newValue
+      this.wx.fog.thickness = ftToM(newValue)
     },
     updateCloudBase(newValue: number) {
-      this.wx.clouds.base = newValue
+      this.wx.clouds.base = ftToM(newValue)
     },
     updateCloudThickness(newValue: number) {
-      this.wx.clouds.thickness = newValue
+      this.wx.clouds.thickness = ftToM(newValue)
     },
     updateDustVis(newValue: number) {
-      this.wx.dust_density = newValue
+      this.wx.dust_density = ftToM(newValue)
     },
-    setAll(input: Partial<TWeather>) {
-      if (input !== null) {
-        this.wx = { ...this.wx, ...input }
-      }
+    setAll(input: TWeather) {
+      this.wx = input
     }
   },
   getters: {
