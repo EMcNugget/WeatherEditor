@@ -3,6 +3,7 @@
     <n-form-item :label="labelText" label-style="color: white">
       <n-slider
         v-model:value="value"
+        :on-update:value="update"
         :step="1"
         :min="min"
         :max="max"
@@ -53,8 +54,10 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const value = ref(props.val)
+
     return {
-      value: ref(props.val)
+      value
     }
   },
   components: {
@@ -62,6 +65,13 @@ export default defineComponent({
     NSlider,
     NSpace,
     NFormItem
-  }
+  },
+  methods: {
+    update(newValue: number) {
+      this.value = newValue
+      this.$emit('update-value', newValue)
+    }
+  },
+  emits: ['update-value']
 })
 </script>
