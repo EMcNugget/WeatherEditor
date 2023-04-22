@@ -4,13 +4,14 @@ export const mmHgToinHG = (mmHG: number) => {
 }
 
 export const inHgTommHG = (inHg: number) => {
-  return Number(inHg * 25.4)
+  const qnh = inHg * 25.4
+  return Number(qnh.toFixed(2))
 }
 
 export const ftToM = (value: number) => {
-  return value / 0.3048
+  return Math.round(value / 3.28084)
 }
 
 export const MToft = (value: number) => {
-  return value * 0.3048
+  return Math.round(value * 3.28084)
 }

@@ -4,6 +4,7 @@
       <n-form-item label="Temperature" label-style="color: white">
         <n-input-number
           id="temperature-input"
+          @update:value="updateTemp"
           :min="8.4"
           :max="50"
           v-model:value="temp"
@@ -18,6 +19,7 @@
         <n-input-number
           id="pressure-input"
           v-model:value="pressure"
+          @update:value="updatePressure"
           class="w-full min-w-24"
           size="small"
           :step="0.01"
@@ -34,19 +36,25 @@
           class="w-full"
           v-model:value="halo_preset"
           :options="halo_options"
+          @update:value="updateHaloPreset"
         />
       </n-form-item>
-      <div v-if="halo_preset !== 'o1' && halo_preset !== 'o2'">
+      <div v-if="halo_preset !== 'off' && halo_preset !== 'auto'">
         <n-form-item label="Halo Preset" label-style="color: white">
           <n-select
             class="w-full"
+            @update:value="updateHaloCrystalPreset"
             v-model:value="halo_crystal_preset"
-            :options="halo_options"
+            :options="crystal_options"
           />
         </n-form-item>
       </div>
       <n-divider class="divider" />
-      <n-checkbox v-model:checked="isFogEnabled">Toggle Fog</n-checkbox>
+      <n-checkbox
+        v-model:checked="isFogEnabled"
+        @update:checked="updateToggleFog"
+        >Toggle Fog</n-checkbox
+      >
       <SliderComponent
         labelText="Fog Visibility"
         v-model:value="fog_visibility"
@@ -71,6 +79,7 @@
         <n-select
           class="w-full"
           v-model:value="cloud_preset"
+          @update:value="updateCloudPreset"
           :options="cloud_options"
         />
       </n-form-item>
@@ -93,6 +102,7 @@
             id="cloud-thickness-input"
             class="w-full min-w-24"
             v-model:value="cloud_density"
+            @update:value="updateCloudDensity"
             size="small"
             :min="0"
             :max="10"
@@ -100,7 +110,10 @@
         </n-form-item>
         <n-divider class="divider" />
       </div>
-      <n-checkbox v-model:checked="isDustSmokeEnabled">
+      <n-checkbox
+        v-model:checked="isDustSmokeEnabled"
+        @update:checked="updateToggleDust"
+      >
         Toggle Dust/Smoke
       </n-checkbox>
       <SliderComponent
@@ -128,90 +141,140 @@ import {
   NDivider,
   NSpace
 } from 'naive-ui'
+import { mmHgToinHG, inHgTommHG, MToft } from '../libs/convert'
 import { useWeatherStore } from '../stores/state'
+import { computed } from 'vue'
 
 export default {
   setup() {
-    const Weather = useWeatherStore()
+    const Weather = computed(() => useWeatherStore())
 
-    const cloud_preset = Weather.wx.clouds.preset
-      ? ref(Weather.wx.clouds.preset)
+    const cloud_preset = Weather.value.wx.clouds.preset
+      ? ref(Weather.value.wx.clouds.preset)
       : ref('Nothing')
-    const cloud_base = ref(Weather.wx.clouds.base)
-    const cloud_thickness = ref(Weather.wx.clouds.thickness)
-    const cloud_density = ref(Weather.wx.clouds.density)
-    const isDustSmokeEnabled = ref(Weather.wx.enable_dust)
-    const dust_smoke_visibility = ref(Weather.wx.dust_density)
-    const isFogEnabled = ref(Weather.wx.enable_fog)
-    const fog_thickness = ref(Weather.wx.fog.thickness)
-    const fog_visibility = ref(Weather.wx.fog.visibility)
-    const temp = ref(Weather.wx.season.temperature)
-    const pressure = ref(Weather.wx.qnh)
-    const halo_preset = ref(Weather.wx.halo.preset)
-    const halo_crystal_preset = ref(Weather.wx.halo.crystalPreset)
+    const cloud_base = ref(MToft(Weather.value.wx.clouds.base))
+    const cloud_thickness = ref(
+      MToft(
+        Weather.value.wx.clouds.thickness
+          ? Weather.value.wx.clouds.thickness
+          : 0
+      )
+    )
+    const cloud_density = ref(Weather.value.wx.clouds.density)
+    const isDustSmokeEnabled = ref(Weather.value.wx.enable_dust)
+    const dust_smoke_visibility = ref(MToft(Weather.value.wx.dust_density))
+    const isFogEnabled = ref(Weather.value.wx.enable_fog)
+    const fog_thickness = ref(MToft(Weather.value.wx.fog.thickness))
+    const fog_visibility = ref(MToft(Weather.value.wx.fog.visibility))
+    const temp = ref(Weather.value.wx.season.temperature)
+    const pressure = ref(mmHgToinHG(Weather.value.wx.qnh))
+    const halo_preset = ref(Weather.value.wx.halo.preset)
+    const halo_crystal_preset = ref(Weather.value.wx.halo.crystalsPreset)
+
+    const updatePressure = (value: number) => {
+      Weather.value.wx.qnh = inHgTommHG(value)
+      console.log(Weather.value.wx.qnh)
+    }
+
+    const updateTemp = (value: number) => {
+      Weather.value.wx.season.temperature = value
+    }
+
+    const updateHaloPreset = (value: string) => {
+      Weather.value.wx.halo.preset = value
+    }
+
+    const updateHaloCrystalPreset = (value: string) => {
+      Weather.value.wx.halo.crystalsPreset = value
+    }
+
+    const updateCloudPreset = (value: string) => {
+      Weather.value.wx.clouds.preset = value
+    }
+
+    const updateCloudDensity = (value: number) => {
+      Weather.value.wx.clouds.density = value
+    }
+
+    const updateToggleDust = (value: boolean) => {
+      Weather.value.wx.enable_dust = value
+    }
+
+    const updateToggleFog = (value: boolean) => {
+      Weather.value.wx.enable_fog = value
+    }
 
     watch(
-      () => isDustSmokeEnabled.value,
+      () => Weather.value.wx.enable_dust,
       (newValue) => {
-        Weather.wx.enable_dust = newValue
+        isDustSmokeEnabled.value = newValue
       }
     )
 
     watch(
-      () => halo_preset.value,
+      () => Weather.value.wx.halo.preset,
       (newValue) => {
-        Weather.wx.halo.preset = newValue
+        halo_preset.value = newValue
       }
     )
 
     watch(
-      () => halo_crystal_preset.value,
+      () => Weather.value.wx.halo.crystalsPreset,
       (newValue) => {
-        Weather.wx.halo.crystalPreset = newValue
+        halo_crystal_preset.value =
+          newValue === undefined ? 'Tangents' : newValue
       }
     )
 
     watch(
-      () => cloud_preset.value,
+      () => Weather.value.wx.clouds.preset,
       (newValue) => {
-        Weather.wx.clouds.preset = newValue
+        cloud_preset.value = newValue === undefined ? 'Nothing' : newValue
       }
     )
 
     watch(
-      () => cloud_density.value,
+      () => Weather.value.wx.clouds.density,
       (newValue) => {
-        Weather.wx.clouds.density = newValue
+        cloud_density.value = newValue
       }
     )
 
     watch(
-      () => temp.value,
+      () => Weather.value.wx.season.temperature,
       (newValue) => {
-        Weather.wx.season.temperature = newValue
+        temp.value = newValue
       }
     )
 
     watch(
-      () => isFogEnabled.value,
+      () => Weather.value.wx.enable_fog,
       (newValue) => {
-        Weather.wx.enable_fog = newValue
+        isFogEnabled.value = newValue
       }
     )
 
     watch(
-      () => pressure.value,
+      () => Weather.value.wx.qnh,
       (newValue) => {
-        Weather.wx.qnh = newValue
+        pressure.value = mmHgToinHG(newValue)
       }
     )
 
     return {
-      updateFogVis: Weather.updateFogVis,
-      updateFogThickness: Weather.updateFogThickness,
-      updateCloudBase: Weather.updateCloudBase,
-      updateCloudThickness: Weather.updateCloudThickness,
-      updateDustVis: Weather.updateDustVis,
+      updatePressure,
+      updateTemp,
+      updateHaloPreset,
+      updateHaloCrystalPreset,
+      updateCloudPreset,
+      updateCloudDensity,
+      updateToggleDust,
+      updateToggleFog,
+      updateFogVis: Weather.value.updateFogVis,
+      updateFogThickness: Weather.value.updateFogThickness,
+      updateCloudBase: Weather.value.updateCloudBase,
+      updateCloudThickness: Weather.value.updateCloudThickness,
+      updateDustVis: Weather.value.updateDustVis,
       cloud_preset,
       cloud_base,
       isFogEnabled,
@@ -226,15 +289,18 @@ export default {
       cloud_density,
       halo_crystal_preset,
       halo_options: [
-        { label: 'Off', value: 'Off' },
-        { label: 'Auto', value: 'Auto' },
-        { label: 'Ice Halo On All Mediums', value: 'o3' },
-        { label: 'Ice Halo On High Volumentric Clouds', value: 'o4' },
+        { label: 'Off', value: 'off' },
+        { label: 'Auto', value: 'auto' },
+        { label: 'Ice Halo On All Mediums', value: 'AtmoHighClouds' },
+        {
+          label: 'Ice Halo On High Volumentric Clouds',
+          value: 'VolumetricOnly'
+        },
         {
           label: 'Ice Halo On Cirrus and High Volumentric Clouds',
-          value: 'o5'
+          value: 'HighClouds'
         },
-        { label: 'Ice Halo On Cirrus Clouds', value: 'o6' }
+        { label: 'Ice Halo On Cirrus Clouds', value: 'CirrusOnly' }
       ],
       crystal_options: [
         { label: 'AllKinds', value: 'AllKinds' },

@@ -26,8 +26,8 @@ export type TWeather = {
   }
   groundTurbulence: number
   halo: {
+    crystalsPreset?: string
     preset: string
-    crystalPreset?: string
   }
   modifiedTime: boolean
   name: string // 'Winter, clean sky'

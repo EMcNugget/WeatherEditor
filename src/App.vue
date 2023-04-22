@@ -19,9 +19,6 @@
         <WindConditions />
       </div>
     </div>
-    <n-button size="large" @click="handleSaveClick" class="mb-4 ml-10"
-      >Save</n-button
-    >
   </n-config-provider>
 </template>
 
@@ -29,21 +26,18 @@
 import AtmosphereClouds from './components/AtmosphereClouds.vue'
 import WindConditions from './components/WindConditions.vue'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
-import { NConfigProvider, NButton } from 'naive-ui'
+import { NConfigProvider } from 'naive-ui'
 import { useThemeStore } from './stores/state'
-import { useWeatherStore } from './stores/state'
 import { ref } from 'vue'
 
 export default {
   components: {
     AtmosphereClouds,
     WindConditions,
-    NConfigProvider,
-    NButton
+    NConfigProvider
   },
   setup() {
     const themeStore = useThemeStore()
-    const wx = useWeatherStore()
     const theme = ref<GlobalTheme>(themeStore.theme)
     const selectedTheme = ref<string>(themeStore.getSelectedTheme)
     const themeOverrides = ref<GlobalThemeOverrides>(
@@ -54,15 +48,11 @@ export default {
       themeStore.setThemeOverrides(overrides)
     }
 
-    const handleSaveClick = () => {
-      console.log(wx.getWx)
-    }
     return {
       theme,
       selectedTheme,
       themeOverrides,
-      setThemeOverrides,
-      handleSaveClick
+      setThemeOverrides
     }
   }
 }

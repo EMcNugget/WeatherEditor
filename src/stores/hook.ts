@@ -1,12 +1,15 @@
+import { computed } from 'vue'
 import { useWeatherStore } from './state'
 import type { TWeather } from './utils/wxtypes'
 
-const useWeather = useWeatherStore()
-
 export const getWeather = (): TWeather => {
-  return useWeather.getWx
+  const useWeather = computed(() => useWeatherStore())
+
+  return useWeather.value.getWx
 }
 
 export const inputWeather = (input: TWeather) => {
-  useWeather.setAll(input)
+  const useWeather = computed(() => useWeatherStore())
+
+  useWeather.value.setAll(input)
 }

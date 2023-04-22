@@ -18,7 +18,8 @@ export const Weather: TWeather = {
   },
   groundTurbulence: 0,
   halo: {
-    preset: 'Off'
+    preset: 'off',
+    crystalsPreset: 'Tangents'
   },
   modifiedTime: true,
   name: 'Winter, clean sky',
